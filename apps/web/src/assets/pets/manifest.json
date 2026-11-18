@@ -1,0 +1,1159 @@
+{
+  "frameWidth": 224,
+  "frameHeight": 176,
+  "portraits": {
+    "columns": 6,
+    "rows": 3,
+    "density": 2,
+    "indices": {
+      "golden": 0,
+      "beagle": 1,
+      "perro-mestizo": 2,
+      "labrador": 3,
+      "husky": 4,
+      "corgi": 5,
+      "pug": 6,
+      "poodle": 7,
+      "dalmata": 8,
+      "gato-naranja": 9,
+      "gato-negro": 10,
+      "gato-blanco": 11,
+      "gato-gris": 12,
+      "gato-atigrado": 13,
+      "gato-tricolor": 14,
+      "gato-siames": 15,
+      "sphynx": 16,
+      "gato-mestizo": 17
+    }
+  },
+  "animated": {
+    "golden": {
+      "columns": 8,
+      "rows": 9,
+      "density": 1,
+      "type": "detailed",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 4,
+          "fps": 3
+        },
+        "walk": {
+          "start": 4,
+          "count": 6,
+          "fps": 7
+        },
+        "run": {
+          "start": 10,
+          "count": 4,
+          "fps": 8
+        },
+        "sit": {
+          "start": 14,
+          "count": 4,
+          "fps": 5
+        },
+        "sleep": {
+          "start": 18,
+          "count": 3,
+          "fps": 2
+        },
+        "wake": {
+          "start": 21,
+          "count": 4,
+          "fps": 5
+        },
+        "eat": {
+          "start": 25,
+          "count": 5,
+          "fps": 5
+        },
+        "drink": {
+          "start": 30,
+          "count": 5,
+          "fps": 5
+        },
+        "bath": {
+          "start": 35,
+          "count": 6,
+          "fps": 5
+        },
+        "shake": {
+          "start": 41,
+          "count": 5,
+          "fps": 7
+        },
+        "play": {
+          "start": 46,
+          "count": 5,
+          "fps": 6
+        },
+        "jump": {
+          "start": 51,
+          "count": 5,
+          "fps": 7
+        },
+        "pet": {
+          "start": 56,
+          "count": 5,
+          "fps": 5
+        },
+        "happy": {
+          "start": 61,
+          "count": 10,
+          "fps": 6
+        }
+      }
+    },
+    "gato-atigrado": {
+      "columns": 8,
+      "rows": 10,
+      "density": 1,
+      "type": "detailed",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 9,
+          "fps": 4
+        },
+        "walk": {
+          "start": 9,
+          "count": 8,
+          "fps": 8
+        },
+        "run": {
+          "start": 17,
+          "count": 6,
+          "fps": 8
+        },
+        "sit": {
+          "start": 23,
+          "count": 6,
+          "fps": 5
+        },
+        "sleep": {
+          "start": 29,
+          "count": 5,
+          "fps": 2
+        },
+        "wake": {
+          "start": 34,
+          "count": 7,
+          "fps": 5
+        },
+        "eat": {
+          "start": 41,
+          "count": 5,
+          "fps": 5
+        },
+        "drink": {
+          "start": 46,
+          "count": 4,
+          "fps": 5
+        },
+        "bath": {
+          "start": 50,
+          "count": 4,
+          "fps": 5
+        },
+        "shake": {
+          "start": 54,
+          "count": 4,
+          "fps": 6
+        },
+        "play": {
+          "start": 58,
+          "count": 7,
+          "fps": 6
+        },
+        "jump": {
+          "start": 65,
+          "count": 6,
+          "fps": 7
+        },
+        "pet": {
+          "start": 71,
+          "count": 4,
+          "fps": 5
+        },
+        "happy": {
+          "start": 75,
+          "count": 5,
+          "fps": 6
+        }
+      }
+    },
+    "beagle": {
+      "columns": 8,
+      "rows": 8,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 5
+        },
+        "walk": {
+          "start": 5,
+          "count": 5
+        },
+        "run": {
+          "start": 10,
+          "count": 5
+        },
+        "sit": {
+          "start": 15,
+          "count": 5
+        },
+        "sleep": {
+          "start": 20,
+          "count": 5
+        },
+        "wake": {
+          "start": 25,
+          "count": 5
+        },
+        "eat": {
+          "start": 30,
+          "count": 3
+        },
+        "drink": {
+          "start": 33,
+          "count": 2
+        },
+        "bath": {
+          "start": 35,
+          "count": 5
+        },
+        "shake": {
+          "start": 40,
+          "count": 5
+        },
+        "play": {
+          "start": 45,
+          "count": 5
+        },
+        "jump": {
+          "start": 50,
+          "count": 5
+        },
+        "pet": {
+          "start": 55,
+          "count": 5
+        }
+      }
+    },
+    "perro-mestizo": {
+      "columns": 8,
+      "rows": 8,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 5
+        },
+        "walk": {
+          "start": 5,
+          "count": 5
+        },
+        "run": {
+          "start": 10,
+          "count": 5
+        },
+        "sit": {
+          "start": 15,
+          "count": 5
+        },
+        "sleep": {
+          "start": 20,
+          "count": 5
+        },
+        "wake": {
+          "start": 25,
+          "count": 5
+        },
+        "drink": {
+          "start": 30,
+          "count": 5
+        },
+        "bath": {
+          "start": 35,
+          "count": 5
+        },
+        "shake": {
+          "start": 40,
+          "count": 5
+        },
+        "play": {
+          "start": 45,
+          "count": 5
+        },
+        "jump": {
+          "start": 50,
+          "count": 5
+        },
+        "pet": {
+          "start": 55,
+          "count": 5
+        }
+      }
+    },
+    "labrador": {
+      "columns": 8,
+      "rows": 8,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 5
+        },
+        "walk": {
+          "start": 5,
+          "count": 5
+        },
+        "run": {
+          "start": 10,
+          "count": 5
+        },
+        "sit": {
+          "start": 15,
+          "count": 5
+        },
+        "sleep": {
+          "start": 20,
+          "count": 5
+        },
+        "wake": {
+          "start": 25,
+          "count": 5
+        },
+        "eat": {
+          "start": 30,
+          "count": 3
+        },
+        "drink": {
+          "start": 33,
+          "count": 2
+        },
+        "bath": {
+          "start": 35,
+          "count": 5
+        },
+        "shake": {
+          "start": 40,
+          "count": 5
+        },
+        "play": {
+          "start": 45,
+          "count": 5
+        },
+        "jump": {
+          "start": 50,
+          "count": 5
+        },
+        "pet": {
+          "start": 55,
+          "count": 5
+        }
+      }
+    },
+    "husky": {
+      "columns": 8,
+      "rows": 8,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 5
+        },
+        "walk": {
+          "start": 5,
+          "count": 5
+        },
+        "run": {
+          "start": 10,
+          "count": 5
+        },
+        "sit": {
+          "start": 15,
+          "count": 5
+        },
+        "sleep": {
+          "start": 20,
+          "count": 5
+        },
+        "wake": {
+          "start": 25,
+          "count": 5
+        },
+        "drink": {
+          "start": 30,
+          "count": 5
+        },
+        "bath": {
+          "start": 35,
+          "count": 5
+        },
+        "shake": {
+          "start": 40,
+          "count": 5
+        },
+        "play": {
+          "start": 45,
+          "count": 5
+        },
+        "jump": {
+          "start": 50,
+          "count": 5
+        },
+        "pet": {
+          "start": 55,
+          "count": 5
+        }
+      }
+    },
+    "corgi": {
+      "columns": 8,
+      "rows": 8,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 5
+        },
+        "walk": {
+          "start": 5,
+          "count": 5
+        },
+        "run": {
+          "start": 10,
+          "count": 5
+        },
+        "sit": {
+          "start": 15,
+          "count": 5
+        },
+        "sleep": {
+          "start": 20,
+          "count": 5
+        },
+        "wake": {
+          "start": 25,
+          "count": 5
+        },
+        "eat": {
+          "start": 30,
+          "count": 5
+        },
+        "bath": {
+          "start": 35,
+          "count": 5
+        },
+        "shake": {
+          "start": 40,
+          "count": 5
+        },
+        "play": {
+          "start": 45,
+          "count": 5
+        },
+        "jump": {
+          "start": 50,
+          "count": 5
+        },
+        "pet": {
+          "start": 55,
+          "count": 5
+        }
+      }
+    },
+    "pug": {
+      "columns": 8,
+      "rows": 8,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 5
+        },
+        "walk": {
+          "start": 5,
+          "count": 5
+        },
+        "run": {
+          "start": 10,
+          "count": 5
+        },
+        "sit": {
+          "start": 15,
+          "count": 5
+        },
+        "sleep": {
+          "start": 20,
+          "count": 5
+        },
+        "wake": {
+          "start": 25,
+          "count": 5
+        },
+        "drink": {
+          "start": 30,
+          "count": 5
+        },
+        "bath": {
+          "start": 35,
+          "count": 5
+        },
+        "shake": {
+          "start": 40,
+          "count": 5
+        },
+        "play": {
+          "start": 45,
+          "count": 5
+        },
+        "jump": {
+          "start": 50,
+          "count": 5
+        },
+        "pet": {
+          "start": 55,
+          "count": 5
+        }
+      }
+    },
+    "poodle": {
+      "columns": 8,
+      "rows": 8,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 5
+        },
+        "walk": {
+          "start": 5,
+          "count": 5
+        },
+        "run": {
+          "start": 10,
+          "count": 5
+        },
+        "sit": {
+          "start": 15,
+          "count": 5
+        },
+        "sleep": {
+          "start": 20,
+          "count": 5
+        },
+        "wake": {
+          "start": 25,
+          "count": 5
+        },
+        "eat": {
+          "start": 30,
+          "count": 4
+        },
+        "drink": {
+          "start": 34,
+          "count": 1
+        },
+        "bath": {
+          "start": 35,
+          "count": 5
+        },
+        "shake": {
+          "start": 40,
+          "count": 5
+        },
+        "play": {
+          "start": 45,
+          "count": 5
+        },
+        "jump": {
+          "start": 50,
+          "count": 5
+        },
+        "pet": {
+          "start": 55,
+          "count": 5
+        }
+      }
+    },
+    "dalmata": {
+      "columns": 8,
+      "rows": 8,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 5
+        },
+        "walk": {
+          "start": 5,
+          "count": 5
+        },
+        "run": {
+          "start": 10,
+          "count": 5
+        },
+        "sit": {
+          "start": 15,
+          "count": 5
+        },
+        "sleep": {
+          "start": 20,
+          "count": 5
+        },
+        "wake": {
+          "start": 25,
+          "count": 5
+        },
+        "drink": {
+          "start": 30,
+          "count": 5
+        },
+        "bath": {
+          "start": 35,
+          "count": 5
+        },
+        "shake": {
+          "start": 40,
+          "count": 5
+        },
+        "play": {
+          "start": 45,
+          "count": 5
+        },
+        "jump": {
+          "start": 50,
+          "count": 5
+        },
+        "pet": {
+          "start": 55,
+          "count": 5
+        }
+      }
+    },
+    "gato-naranja": {
+      "columns": 5,
+      "rows": 3,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 1
+        },
+        "walk": {
+          "start": 1,
+          "count": 2
+        },
+        "run": {
+          "start": 3,
+          "count": 1
+        },
+        "sit": {
+          "start": 4,
+          "count": 1
+        },
+        "sleep": {
+          "start": 5,
+          "count": 1
+        },
+        "wake": {
+          "start": 6,
+          "count": 1
+        },
+        "eat": {
+          "start": 7,
+          "count": 1
+        },
+        "drink": {
+          "start": 8,
+          "count": 1
+        },
+        "bath": {
+          "start": 9,
+          "count": 1
+        },
+        "shake": {
+          "start": 10,
+          "count": 1
+        },
+        "play": {
+          "start": 11,
+          "count": 1
+        },
+        "jump": {
+          "start": 12,
+          "count": 1
+        },
+        "pet": {
+          "start": 13,
+          "count": 1
+        },
+        "happy": {
+          "start": 14,
+          "count": 1
+        }
+      }
+    },
+    "gato-negro": {
+      "columns": 5,
+      "rows": 3,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 1
+        },
+        "walk": {
+          "start": 1,
+          "count": 2
+        },
+        "run": {
+          "start": 3,
+          "count": 1
+        },
+        "sit": {
+          "start": 4,
+          "count": 1
+        },
+        "sleep": {
+          "start": 5,
+          "count": 1
+        },
+        "wake": {
+          "start": 6,
+          "count": 1
+        },
+        "eat": {
+          "start": 7,
+          "count": 1
+        },
+        "drink": {
+          "start": 8,
+          "count": 1
+        },
+        "bath": {
+          "start": 9,
+          "count": 1
+        },
+        "shake": {
+          "start": 10,
+          "count": 1
+        },
+        "play": {
+          "start": 11,
+          "count": 1
+        },
+        "jump": {
+          "start": 12,
+          "count": 1
+        },
+        "pet": {
+          "start": 13,
+          "count": 1
+        },
+        "happy": {
+          "start": 14,
+          "count": 1
+        }
+      }
+    },
+    "gato-blanco": {
+      "columns": 5,
+      "rows": 3,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 1
+        },
+        "walk": {
+          "start": 1,
+          "count": 2
+        },
+        "run": {
+          "start": 3,
+          "count": 1
+        },
+        "sit": {
+          "start": 4,
+          "count": 1
+        },
+        "sleep": {
+          "start": 5,
+          "count": 1
+        },
+        "wake": {
+          "start": 6,
+          "count": 1
+        },
+        "eat": {
+          "start": 7,
+          "count": 1
+        },
+        "drink": {
+          "start": 8,
+          "count": 1
+        },
+        "bath": {
+          "start": 9,
+          "count": 1
+        },
+        "shake": {
+          "start": 10,
+          "count": 1
+        },
+        "play": {
+          "start": 11,
+          "count": 1
+        },
+        "jump": {
+          "start": 12,
+          "count": 1
+        },
+        "pet": {
+          "start": 13,
+          "count": 1
+        },
+        "happy": {
+          "start": 14,
+          "count": 1
+        }
+      }
+    },
+    "gato-gris": {
+      "columns": 5,
+      "rows": 3,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 1
+        },
+        "walk": {
+          "start": 1,
+          "count": 2
+        },
+        "run": {
+          "start": 3,
+          "count": 1
+        },
+        "sit": {
+          "start": 4,
+          "count": 1
+        },
+        "sleep": {
+          "start": 5,
+          "count": 1
+        },
+        "wake": {
+          "start": 6,
+          "count": 1
+        },
+        "eat": {
+          "start": 7,
+          "count": 1
+        },
+        "drink": {
+          "start": 8,
+          "count": 1
+        },
+        "bath": {
+          "start": 9,
+          "count": 1
+        },
+        "shake": {
+          "start": 10,
+          "count": 1
+        },
+        "play": {
+          "start": 11,
+          "count": 1
+        },
+        "jump": {
+          "start": 12,
+          "count": 1
+        },
+        "pet": {
+          "start": 13,
+          "count": 1
+        },
+        "happy": {
+          "start": 14,
+          "count": 1
+        }
+      }
+    },
+    "gato-tricolor": {
+      "columns": 5,
+      "rows": 3,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 1
+        },
+        "walk": {
+          "start": 1,
+          "count": 2
+        },
+        "run": {
+          "start": 3,
+          "count": 1
+        },
+        "sit": {
+          "start": 4,
+          "count": 1
+        },
+        "sleep": {
+          "start": 5,
+          "count": 1
+        },
+        "wake": {
+          "start": 6,
+          "count": 1
+        },
+        "eat": {
+          "start": 7,
+          "count": 1
+        },
+        "drink": {
+          "start": 8,
+          "count": 1
+        },
+        "bath": {
+          "start": 9,
+          "count": 1
+        },
+        "shake": {
+          "start": 10,
+          "count": 1
+        },
+        "play": {
+          "start": 11,
+          "count": 1
+        },
+        "jump": {
+          "start": 12,
+          "count": 1
+        },
+        "pet": {
+          "start": 13,
+          "count": 1
+        },
+        "happy": {
+          "start": 14,
+          "count": 1
+        }
+      }
+    },
+    "gato-siames": {
+      "columns": 5,
+      "rows": 3,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 1
+        },
+        "walk": {
+          "start": 1,
+          "count": 2
+        },
+        "run": {
+          "start": 3,
+          "count": 1
+        },
+        "sit": {
+          "start": 4,
+          "count": 1
+        },
+        "sleep": {
+          "start": 5,
+          "count": 1
+        },
+        "wake": {
+          "start": 6,
+          "count": 1
+        },
+        "eat": {
+          "start": 7,
+          "count": 1
+        },
+        "drink": {
+          "start": 8,
+          "count": 1
+        },
+        "bath": {
+          "start": 9,
+          "count": 1
+        },
+        "shake": {
+          "start": 10,
+          "count": 1
+        },
+        "play": {
+          "start": 11,
+          "count": 1
+        },
+        "jump": {
+          "start": 12,
+          "count": 1
+        },
+        "pet": {
+          "start": 13,
+          "count": 1
+        },
+        "happy": {
+          "start": 14,
+          "count": 1
+        }
+      }
+    },
+    "sphynx": {
+      "columns": 5,
+      "rows": 3,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 1
+        },
+        "walk": {
+          "start": 1,
+          "count": 2
+        },
+        "run": {
+          "start": 3,
+          "count": 1
+        },
+        "sit": {
+          "start": 4,
+          "count": 1
+        },
+        "sleep": {
+          "start": 5,
+          "count": 1
+        },
+        "wake": {
+          "start": 6,
+          "count": 1
+        },
+        "eat": {
+          "start": 7,
+          "count": 1
+        },
+        "drink": {
+          "start": 8,
+          "count": 1
+        },
+        "bath": {
+          "start": 9,
+          "count": 1
+        },
+        "shake": {
+          "start": 10,
+          "count": 1
+        },
+        "play": {
+          "start": 11,
+          "count": 1
+        },
+        "jump": {
+          "start": 12,
+          "count": 1
+        },
+        "pet": {
+          "start": 13,
+          "count": 1
+        },
+        "happy": {
+          "start": 14,
+          "count": 1
+        }
+      }
+    },
+    "gato-mestizo": {
+      "columns": 5,
+      "rows": 3,
+      "density": 1,
+      "type": "compact",
+      "tracks": {
+        "idle": {
+          "start": 0,
+          "count": 1
+        },
+        "walk": {
+          "start": 1,
+          "count": 2
+        },
+        "run": {
+          "start": 3,
+          "count": 1
+        },
+        "sit": {
+          "start": 4,
+          "count": 1
+        },
+        "sleep": {
+          "start": 5,
+          "count": 1
+        },
+        "wake": {
+          "start": 6,
+          "count": 1
+        },
+        "eat": {
+          "start": 7,
+          "count": 1
+        },
+        "drink": {
+          "start": 8,
+          "count": 1
+        },
+        "bath": {
+          "start": 9,
+          "count": 1
+        },
+        "shake": {
+          "start": 10,
+          "count": 1
+        },
+        "play": {
+          "start": 11,
+          "count": 1
+        },
+        "jump": {
+          "start": 12,
+          "count": 1
+        },
+        "pet": {
+          "start": 13,
+          "count": 1
+        },
+        "happy": {
+          "start": 14,
+          "count": 1
+        }
+      }
+    }
+  }
+}
