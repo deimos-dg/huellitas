@@ -16,7 +16,7 @@ Abre `/creador` desde la navegación principal. El creador permite elegir entre 
 | `apps/api` | ASP.NET Core Web API, EF Core y migraciones de PostgreSQL. |
 | `tests/Huellitas.Api.Tests` | Pruebas HTTP y persistencia con xUnit. |
 | `tests/e2e` | Pruebas de portada, creador, navegación adaptable y teclado con Playwright. |
-| `Imagenes` | Láminas originales, fotogramas y retrato fuente del Sphynx. |
+| `Imagenes` | Láminas originales, GIF de mascotas y referencias de escenarios. |
 | `scripts/pets` | Preparación reproducible de atlas y máscaras de color. |
 
 ## Inicio local

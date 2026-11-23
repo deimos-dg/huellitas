@@ -73,8 +73,9 @@ export const motionLabels: Record<Motion, string> = {
 }
 
 export type Atlas = { art: string; collar: string; columns: number; rows: number }
-export type Track = { start: number; count: number; fps?: number }
-export type MotionAtlas = Atlas & { type: 'detailed' | 'compact'; tracks: Partial<Record<Motion, Track>> }
+type AtlasSheet = { id: string; columns: number; rows: number }
+export type Track = { start: number; count: number; fps?: number; durations?: number[]; sheet?: AtlasSheet }
+export type MotionAtlas = Atlas & { type: 'detailed' | 'compact'; previewScale: number; tracks: Partial<Record<Motion, Track>> }
 
 export const spriteDimensions = { width: manifest.frameWidth, height: manifest.frameHeight }
 export const portraitAtlas = { ...manifest.portraits, art: portraitArt, collar: portraitCollar }
@@ -84,11 +85,20 @@ const spriteUrls = import.meta.glob<string>(['../../assets/pets/*.webp', '!../..
   query: '?url&no-inline',
   import: 'default',
 })
-export const motionAtlases = Object.fromEntries(Object.entries(manifest.animated).map(([id, atlas]) => [
-  id,
-  {
-    ...atlas,
+
+function sheetUrls(id: string) {
+  return {
     art: spriteUrls[`../../assets/pets/${id}-art.webp`],
     collar: spriteUrls[`../../assets/pets/${id}-collar.webp`],
-  },
+  }
+}
+
+export const motionAtlases = Object.fromEntries(Object.entries(manifest.animated).map(([id, atlas]) => [
+  id,
+  { ...atlas, ...sheetUrls(id) },
 ])) as Partial<Record<PetId, MotionAtlas>>
+
+export function getMotionSheet(atlas: MotionAtlas, motion: Motion): Atlas {
+  const sheet = atlas.tracks[motion]?.sheet
+  return sheet ? { ...sheet, ...sheetUrls(sheet.id) } : atlas
+}

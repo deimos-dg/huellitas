@@ -52,6 +52,12 @@ export const sheets = {
 const dogs = 'Galería de perros adorables en estilo cartoon.png'
 const cats = 'Nueve gatos adorables en cuadrícula.png'
 
+export const goldenGifs = {
+  idle: { file: 'Golden_retriver/Perro dorado animado moviendo la cola.gif', scale: .43, ground: 325, transparent: true },
+  run: { file: 'Golden_retriver/Perro dorado corriendo animado.gif', scale: .55, ground: 256, transparent: true },
+  jump: { file: 'Golden_retriver/Perro dorado en salto animado.gif', scale: .43, ground: 325 },
+}
+
 // The two boxes are the portrait and its collar window in the original image.
 export const portraits = {
   golden: { sheet: 'golden' },
@@ -76,6 +82,12 @@ export const portraits = {
   'gato-atigrado': { sheet: 'gato-atigrado' },
   'gato-tricolor': { file: cats, bounds: [1036, 347, 1288, 690], band: [1176, 515, 1267, 558], color: 'olive' },
   'gato-siames': { file: cats, bounds: [105, 692, 353, 1003], band: [231, 833, 333, 885], color: 'olive' },
-  sphynx: { file: 'Sphynx_retrato.png', band: [717, 421, 904, 543], color: 'olive', transparent: true },
+  sphynx: {
+    file: 'Atlas de Animaciones de Gatos Variados-2.png',
+    bounds: [6, 799, 109, 898],
+    band: [55, 839, 93, 859],
+    color: 'teal',
+    backdrop: 'checker',
+  },
   'gato-mestizo': { file: cats, bounds: [1044, 689, 1292, 1003], band: [1144, 835, 1261, 884], color: 'olive' },
 }

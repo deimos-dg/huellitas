@@ -86,7 +86,13 @@ export function HomePage() {
                 <span className="way-icon"><Icon size={25} strokeWidth={1.75} aria-hidden="true" /></span>
                 <h3 id={`${id}-titulo`}>{title}</h3>
                 <p>{description}</p>
-                {id === 'jardin' && <a className="way-link" href="/creador">Crea tu mascota <ArrowRight size={17} aria-hidden="true" /></a>}
+                {id === 'jardin' && (
+                  <>
+                    <a className="way-link" href="/jardin">Visita el jardín <ArrowRight size={17} aria-hidden="true" /></a>
+                    <a className="way-link" href="/creador">Crea tu mascota <ArrowRight size={17} aria-hidden="true" /></a>
+                    <a className="way-link" href="/habitacion">Visita la habitación <ArrowRight size={17} aria-hidden="true" /></a>
+                  </>
+                )}
               </article>
             ))}
           </div>

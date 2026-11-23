@@ -12,6 +12,7 @@
     "dev": "npm run dev --workspace @huellitas/web",
     "build": "npm run build --workspace @huellitas/web",
     "typecheck": "npm run typecheck --workspace @huellitas/web",
+    "test:pet-motion": "tsc -p tests/pet-motion-2d && node --test tests/pet-motion-2d/bin/tests/pet-motion-2d/pet-motion.test.js",
     "test:e2e": "playwright test",
     "prepare:pets": "node scripts/pets/prepare.mjs"
   },

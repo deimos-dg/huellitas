@@ -89,7 +89,7 @@ export function* compactAnimationSources() {
         scale: panel.scale,
       }))
     }
-    yield { id, type: 'compact', tracks }
+    yield { id, type: 'compact', previewScale: .64, tracks }
   }
 
   for (const [id, panel] of Object.entries(catPanels)) {
@@ -107,6 +107,6 @@ export function* compactAnimationSources() {
       const poses = tracks[action] ??= []
       poses.push(frame)
     }
-    yield { id, type: 'compact', tracks }
+    yield { id, type: 'compact', previewScale: .85, tracks }
   }
 }

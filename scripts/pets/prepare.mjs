@@ -3,13 +3,15 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import { compactAnimationSources } from './compact-sheets.mjs'
-import { portraits, sheets } from './sources.mjs'
+import { goldenGifs, portraits, sheets } from './sources.mjs'
 
 const sourceDirectory = fileURLToPath(new URL('../../Imagenes/', import.meta.url))
 const outputDirectory = fileURLToPath(new URL('../../apps/web/src/assets/pets/', import.meta.url))
 const width = 224
 const height = 176
 const groundLine = 149
+const portraitDensity = 3
+const animationDensity = 2
 const decodedSheets = new Map()
 
 const colorMatches = {
@@ -177,12 +179,13 @@ function createCollarMask(pixels, clipWidth, [left, top], band, color, contour) 
   return mask
 }
 
-async function readClip({ file, bounds }) {
-  if (!decodedSheets.has(file)) {
-    const decoded = sharp(join(sourceDirectory, file)).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
-    decodedSheets.set(file, decoded)
+async function readClip({ file, bounds, page }) {
+  const key = page === undefined ? file : `${file}#${page}`
+  if (!decodedSheets.has(key)) {
+    const decoded = sharp(join(sourceDirectory, file), { page }).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+    decodedSheets.set(key, decoded)
   }
-  const { data, info } = await decodedSheets.get(file)
+  const { data, info } = await decodedSheets.get(key)
   if (!bounds) return { pixels: Buffer.from(data), width: info.width, height: info.height }
 
   const [left, top, right, bottom] = bounds
@@ -232,29 +235,29 @@ async function prepareFrame(source, density = 1) {
   const origin = source.bounds ?? [0, 0]
   const isPortrait = source.kind === 'portrait'
   if (!source.transparent) {
-    removeBackdrop(pixels, clip.width, clip.height, source.kind)
-    if (isPortrait) removePortraitFoliage(pixels, clip.width, clip.height, origin, source.band)
+    removeBackdrop(pixels, clip.width, clip.height, source.backdrop ?? source.kind)
+    if (isPortrait && !source.backdrop) removePortraitFoliage(pixels, clip.width, clip.height, origin, source.band)
   }
-  retainSubject(pixels, clip.width, isPortrait, Boolean(source.scale))
+  retainSubject(pixels, clip.width, isPortrait || source.keepLargest, source.scale > 1)
   const bounds = getVisibleBounds(pixels, clip.width, clip.height)
   const band = getCollarBand(source, origin, bounds)
   const mask = createCollarMask(pixels, clip.width, origin, band, source.color, source.contour)
 
   const maxHeight = isPortrait ? 126 : height - 12
   const scale = Math.min((width - 12) / bounds.width, maxHeight / bounds.height, isPortrait ? Infinity : source.scale ?? 1)
-  const size = { width: Math.round(bounds.width * scale), height: Math.round(bounds.height * scale) }
-  const encodedSize = { width: size.width * density, height: size.height * density }
+  const encodedSize = { width: Math.round(bounds.width * scale * density), height: Math.round(bounds.height * scale * density) }
   const ground = source.ground ?? origin[1] + bounds.top + bounds.height - 1
-  const bodyAxis = isPortrait ? bounds.width / 2 : getBodyAxis(pixels, clip.width, bounds) - bounds.left
+  const axis = isPortrait ? bounds.left + bounds.width / 2 : source.center ?? getBodyAxis(pixels, clip.width, bounds)
+  const bodyAxis = axis - bounds.left
   const top = isPortrait
-    ? groundLine - size.height + 1
-    : Math.max(0, Math.min(height - size.height, Math.round(groundLine - (ground - origin[1] - bounds.top) * scale)))
-  const left = Math.max(0, Math.min(width - size.width, Math.round(width / 2 - bodyAxis * scale)))
+    ? (groundLine + 1) * density - encodedSize.height
+    : Math.max(0, Math.min(height * density - encodedSize.height, Math.round((groundLine - (ground - origin[1] - bounds.top) * scale) * density)))
+  const left = Math.max(0, Math.min(width * density - encodedSize.width, Math.round((width / 2 - bodyAxis * scale) * density)))
 
   function extract(data) {
     return sharp(data, { raw: { width: clip.width, height: clip.height, channels: 4 } })
       .extract(bounds)
-      .resize({ ...encodedSize, fit: 'fill' })
+      .resize({ ...encodedSize, fit: 'fill', kernel: sharp.kernel.lanczos3 })
       .raw()
       .toBuffer()
   }
@@ -264,17 +267,17 @@ async function prepareFrame(source, density = 1) {
     art,
     collar,
     raw: { ...encodedSize, channels: 4 },
-    left: left * density,
-    top: top * density,
+    left,
+    top,
   }
 }
 
-async function createAtlas(name, frames, columns, density = 1) {
+async function createAtlas(name, frames, columns, density = 1, directory = outputDirectory, layers = ['art', 'collar']) {
   const rows = Math.ceil(frames.length / columns)
   const cellWidth = width * density
   const cellHeight = height * density
   const create = { width: cellWidth * columns, height: cellHeight * rows, channels: 4, background: '#00000000' }
-  await Promise.all(['art', 'collar'].map((layer) => {
+  await Promise.all(layers.map((layer) => {
     const placements = frames.map((frame, index) => ({
       input: frame[layer], raw: frame.raw,
       left: index % columns * cellWidth + frame.left,
@@ -282,73 +285,132 @@ async function createAtlas(name, frames, columns, density = 1) {
     }))
     return sharp({ create })
       .composite(placements)
-      .webp({ quality: 89, alphaQuality: 100, lossless: layer === 'collar' })
-      .toFile(join(outputDirectory, `${name}-${layer}.webp`))
+      .webp({ lossless: true, effort: 3 })
+      .toFile(join(directory, `${name}-${layer}.webp`))
   }))
   return { columns, rows, density }
 }
 
-await mkdir(outputDirectory, { recursive: true })
-const animated = {}
-const posterFrames = new Map()
-
-function* detailedAnimationSources() {
-  for (const [id, sheet] of Object.entries(sheets)) {
-    const tracks = {}
-    for (const [action, [rowIndex, first, count, ground, fps, propDepth = 0]] of Object.entries(sheet.tracks)) {
-      const [top, bottom, cuts] = sheet.rows[rowIndex]
-      const poses = []
-      for (let pose = first; pose < first + count; pose++) {
-        const [left, right] = sheet.horizontalOverrides?.[rowIndex]?.[pose] ?? [cuts[pose], cuts[pose + 1]]
-        poses.push({
-          file: sheet.file,
-          bounds: [left, top, right, bottom],
-          band: [left, top, right, ground - propDepth + 1],
-          color: sheet.collar,
-          ground,
-        })
-      }
-      tracks[action] = { poses, fps }
-    }
-    yield { id, type: 'detailed', tracks }
+async function prepareRoomAtlas() {
+  const directory = fileURLToPath(new URL('../../apps/web/src/assets/pet-motion-2d/', import.meta.url))
+  const sources = {
+    pivot: ['Perro dorado girando feliz.gif', .49, 0, 11],
+    posture: ['Animación de cachorro dorado sentándose.gif', .47, 0, 11],
+    bed: ['Perro dorado quedándose dormido.gif', .45, 0, 10],
+    stretch: ['Perro dorado despierta y se estira.gif', .43, 2, 14],
   }
-}
-
-for (const { id, type, tracks: sourceTracks } of [...detailedAnimationSources(), ...compactAnimationSources()]) {
   const frames = []
   const tracks = {}
-  for (const [action, track] of Object.entries(sourceTracks)) {
-    const { poses, fps } = Array.isArray(track) ? { poses: track, fps: undefined } : track
-    tracks[action] = { start: frames.length, count: poses.length, fps }
-    for (const [index, pose] of poses.entries()) {
-      const source = { ...pose, kind: 'checker' }
-      try {
-        frames.push(await prepareFrame(source))
-        if (action === 'idle' && index === 0 && portraits[id].sheet) {
-          posterFrames.set(id, await prepareFrame(source, 2))
-        }
-      } catch (error) {
-        throw new Error(`No se pudo preparar ${id}/${action}/${index + 1} en ${source.bounds.join(',')}`, { cause: error })
-      }
+  for (const [id, [name, scale, first, last]] of Object.entries(sources)) {
+    const file = `Golden_retriver/${name}`
+    const info = await sharp(join(sourceDirectory, file), { animated: true }).metadata()
+    if (last >= info.pages) throw new Error(`Faltan fotogramas en ${file}`)
+    tracks[id] = { start: frames.length, first, count: last - first + 1 }
+    for (let page = first; page <= last; page++) {
+      frames.push(await prepareFrame({ file, page, scale, center: info.width / 2, backdrop: 'checker', keepLargest: true }, 1.5))
     }
   }
-  animated[id] = { ...await createAtlas(id, frames, frames.length > 24 ? 8 : 5), type, tracks }
+  await mkdir(directory, { recursive: true })
+  const atlas = await createAtlas('golden-room', frames, 8, 1.5, directory, ['art'])
+  await writeFile(join(directory, 'golden-room.json'), `${JSON.stringify({ ...atlas, tracks }, null, 2)}\n`)
+  console.log(`Preparados ${frames.length} fotogramas originales del Golden para la habitación.`)
 }
 
-const catalog = []
-const indices = {}
-for (const [id, source] of Object.entries(portraits)) {
-  indices[id] = catalog.length
-  catalog.push(source.sheet
-    ? posterFrames.get(source.sheet)
-    : await prepareFrame({ ...source, kind: 'portrait' }, 2))
+if (process.argv.includes('--room')) {
+  await prepareRoomAtlas()
+} else {
+  await prepareCatalog()
 }
 
-const manifest = {
-  frameWidth: width,
-  frameHeight: height,
-  portraits: { ...await createAtlas('portraits', catalog, 6, 2), indices },
-  animated,
+async function prepareCatalog() {
+  await mkdir(outputDirectory, { recursive: true })
+  const animated = {}
+  const posterFrames = new Map()
+
+  async function readGifTracks() {
+    const tracks = {}
+    for (const [action, source] of Object.entries(goldenGifs)) {
+      const { width: clipWidth, pages, delay } = await sharp(join(sourceDirectory, source.file), { animated: true }).metadata()
+      if (!pages || delay?.length !== pages || delay.some((duration) => duration <= 0)) {
+        throw new Error(`El GIF de ${action} requiere una duración por fotograma.`)
+      }
+      const poses = delay.map((_, page) => ({
+        ...source,
+        page,
+        center: clipWidth / 2,
+        band: [0, 0, clipWidth, source.ground],
+        color: 'olive',
+      }))
+      tracks[action] = { poses, durations: delay }
+    }
+    return tracks
+  }
+
+  const authoredGoldenTracks = await readGifTracks()
+
+  function* detailedAnimationSources() {
+    for (const [id, sheet] of Object.entries(sheets)) {
+      const tracks = {}
+      for (const [action, [rowIndex, first, count, ground, fps, propDepth = 0]] of Object.entries(sheet.tracks)) {
+        const [top, bottom, cuts] = sheet.rows[rowIndex]
+        const poses = []
+        for (let pose = first; pose < first + count; pose++) {
+          const [left, right] = sheet.horizontalOverrides?.[rowIndex]?.[pose] ?? [cuts[pose], cuts[pose + 1]]
+          poses.push({
+            file: sheet.file,
+            bounds: [left, top, right, bottom],
+            band: [left, top, right, ground - propDepth + 1],
+            color: sheet.collar,
+            ground,
+          })
+        }
+        tracks[action] = { poses, fps }
+      }
+      yield { id, type: 'detailed', previewScale: 1, tracks: id === 'golden' ? { ...tracks, ...authoredGoldenTracks } : tracks }
+    }
+  }
+
+  for (const { id, type, previewScale, tracks: sourceTracks } of [...detailedAnimationSources(), ...compactAnimationSources()]) {
+    const frames = []
+    const tracks = {}
+    const density = previewScale < .75 ? 1.5 : animationDensity
+    for (const [action, track] of Object.entries(sourceTracks)) {
+      const { poses, fps, durations } = Array.isArray(track) ? { poses: track } : track
+      const target = durations ? [] : frames
+      const start = target.length
+      for (const [index, pose] of poses.entries()) {
+        const source = { ...pose, kind: 'checker' }
+        try {
+          target.push(await prepareFrame(source, density))
+          if (action === 'idle' && index === 0 && portraits[id].sheet) {
+            posterFrames.set(id, await prepareFrame(source, portraitDensity))
+          }
+        } catch (error) {
+          throw new Error(`No se pudo preparar ${id}/${action}/${index + 1} de ${source.file}`, { cause: error })
+        }
+      }
+      const sheetId = `${id}-${action}`
+      const sheet = durations ? { id: sheetId, ...await createAtlas(sheetId, target, 4, density) } : undefined
+      tracks[action] = { start, count: poses.length, fps, durations, sheet }
+    }
+    animated[id] = { ...await createAtlas(id, frames, frames.length > 24 ? 8 : 5, density), type, previewScale, tracks }
+  }
+
+  const catalog = []
+  const indices = {}
+  for (const [id, source] of Object.entries(portraits)) {
+    indices[id] = catalog.length
+    catalog.push(source.sheet
+      ? posterFrames.get(source.sheet)
+      : await prepareFrame({ ...source, kind: 'portrait' }, portraitDensity))
+  }
+
+  const manifest = {
+    frameWidth: width,
+    frameHeight: height,
+    portraits: { ...await createAtlas('portraits', catalog, 6, portraitDensity), indices },
+    animated,
+  }
+  await writeFile(join(outputDirectory, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+  console.log(`Preparados ${catalog.length} retratos y ${Object.keys(animated).length} atlas animados.`)
 }
-await writeFile(join(outputDirectory, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-console.log(`Preparados ${catalog.length} retratos y ${Object.keys(animated).length} atlas animados.`)

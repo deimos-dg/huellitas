@@ -11,9 +11,15 @@ const navigation = [
   { label: 'Creador', href: '/creador' },
 ]
 
-export function SiteLayout({ children, creatorActive = false }: { children: ReactNode; creatorActive?: boolean }) {
+export function SiteLayout({ children, creatorActive = false, roomActive = false, gardenActive = false }: {
+  children: ReactNode
+  creatorActive?: boolean
+  roomActive?: boolean
+  gardenActive?: boolean
+}) {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuToggle = useRef<HTMLButtonElement>(null)
+  const onHomePage = !creatorActive && !roomActive && !gardenActive
 
   function closeOnEscape(event: KeyboardEvent<HTMLElement>) {
     if (event.key === 'Escape' && menuOpen) {
@@ -61,7 +67,7 @@ export function SiteLayout({ children, creatorActive = false }: { children: Reac
           <nav className="footer-links" aria-label="Navegación del pie de página">
             <a href="/#como-funciona">Cómo funciona</a>
             <a href="/#preguntas">Preguntas frecuentes</a>
-            <a href={creatorActive ? '/#inicio' : '#inicio'}>{creatorActive ? 'Volver al inicio' : 'Volver arriba'} <ArrowUpRight size={15} aria-hidden="true" /></a>
+            <a href={onHomePage ? '#inicio' : '/#inicio'}>{onHomePage ? 'Volver arriba' : 'Volver al inicio'} <ArrowUpRight size={15} aria-hidden="true" /></a>
           </nav>
         </div>
       </footer>

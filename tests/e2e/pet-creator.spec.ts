@@ -17,7 +17,7 @@ test('abre el creador desde la portada y muestra nueve variantes por especie', a
   await expect(page.getByRole('img', { name: /Vista previa de Sphynx/ })).toBeVisible()
   await expect(page.getByText('Piel casi sin pelo, orejas grandes y cuerpo esbelto.')).toBeVisible()
   await expect(page.getByRole('group', { name: 'Tono de piel' })).toBeVisible()
-  await expect(page.getByText('Animación 2D', { exact: true })).toBeVisible()
+  await expect(page.getByText('Retrato 2D', { exact: true })).toBeVisible()
   await expect(page.getByLabel('Movimiento', { exact: true }).locator('option')).toHaveCount(14)
 })
 
@@ -40,7 +40,13 @@ test('valida el nombre, aplica las opciones al retrato y conserva el borrador du
   const portrait = page.getByRole('img', { name: 'Vista previa de Canela, Beagle' })
   await expect(portrait.locator('.pet-sprite-art')).toHaveCSS('filter', 'saturate(0.68) brightness(1.1)')
   await expect(portrait.locator('.pet-sprite-collar')).toHaveCSS('background-color', 'rgb(61, 114, 144)')
+  await expect(portrait.locator('.pet-sprite-art')).toHaveCSS('background-image', /portraits-art\.webp/)
+  const movement = page.getByLabel('Movimiento', { exact: true })
+  await movement.selectOption('walk')
   await expect(portrait.locator('.pet-sprite-art')).toHaveCSS('background-image', /beagle-art\.webp/)
+  await expect(portrait.locator('.pet-sprite-body')).toHaveCSS('scale', '0.64')
+  await movement.selectOption('idle')
+  await expect(portrait.locator('.pet-sprite-art')).toHaveCSS('background-image', /portraits-art\.webp/)
 
   await review.click()
   const summary = page.getByRole('region', { name: 'Revisa tu mascota' })
@@ -59,9 +65,9 @@ test('respeta el movimiento reducido y permite reproducir y pausar los fotograma
   await page.goto('/creador')
   const animation = page.getByRole('img', { name: /Vista previa de Golden retriever/ }).locator('.pet-sprite-art')
   const movement = page.getByLabel('Movimiento', { exact: true })
-  await expect(page.getByRole('button', { name: 'Reproducir' })).toBeEnabled()
   await expect(movement.locator('option')).toHaveCount(14)
   await movement.selectOption({ label: 'Caminar' })
+  await expect(page.getByRole('button', { name: 'Reproducir' })).toBeEnabled()
   const initialPose = await animation.evaluate((node) => getComputedStyle(node).backgroundPosition)
 
   await page.clock.runFor(400)

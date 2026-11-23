@@ -1,0 +1,27 @@
+{
+  "columns": 8,
+  "rows": 6,
+  "density": 1.5,
+  "tracks": {
+    "pivot": {
+      "start": 0,
+      "first": 0,
+      "count": 12
+    },
+    "posture": {
+      "start": 12,
+      "first": 0,
+      "count": 12
+    },
+    "bed": {
+      "start": 24,
+      "first": 0,
+      "count": 11
+    },
+    "stretch": {
+      "start": 35,
+      "first": 2,
+      "count": 13
+    }
+  }
+}

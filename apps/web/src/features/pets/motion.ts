@@ -24,10 +24,12 @@ export type MotionTimeline = {
   duration: number
   loop: boolean
   compact: boolean
+  authored: boolean
   takeoff?: { start: number; duration: number }
 }
 
 function frameDuration(action: Motion, track: Track, index: number) {
+  if (track.durations) return track.durations[index]
   const { step, loop, settle = 0 } = timings[action]
   if (action === 'idle') return index === 0 ? 530 : step
   if (action === 'walk' && track.count === 2) return 145
@@ -83,7 +85,7 @@ export function createTimeline(action: Motion, atlas?: MotionAtlas): MotionTimel
     duration += phase.duration
     return { index: phase.index, end: duration }
   })
-  return { action, frames, duration, loop: timings[action].loop, compact, takeoff }
+  return { action, frames, duration, loop: timings[action].loop, compact, authored: Boolean(track.durations), takeoff }
 }
 
 const turn = Math.PI * 2
@@ -94,6 +96,7 @@ export function sampleMotion(timeline: MotionTimeline, elapsed: number) {
   const time = loop ? elapsed % duration : Math.min(elapsed, duration)
   const index = (frames.find((frame) => time < frame.end) ?? frames[frames.length - 1]).index
   const phase = time / duration * turn
+  if (timeline.authored) return { index, done, x: 0, y: 0, scaleY: 1 }
   let x = 0
   let y = 0
   let scaleY = 1

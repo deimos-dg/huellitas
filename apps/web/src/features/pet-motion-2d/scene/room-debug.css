@@ -1,0 +1,42 @@
+.room-debug {
+  margin-top: 1rem;
+  padding: .75rem;
+  border: 1px dashed var(--color-sage);
+  border-radius: .65rem;
+  background: var(--color-ivory);
+  font-size: .85rem;
+}
+
+.room-debug summary { cursor: pointer; font-weight: 800; }
+.room-debug-controls, .room-debug-values { display: flex; flex-wrap: wrap; gap: .65rem 1rem; margin-top: .65rem; }
+.room-debug-controls label, .room-debug-field { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .4rem; max-width: 100%; }
+.room-debug-controls select { border: 1px solid var(--color-sage); border-radius: .3rem; padding: .15rem .3rem; max-width: 100%; }
+.room-debug-controls button { padding: .15rem .5rem; border: 1px solid var(--color-sage); border-radius: .3rem; }
+.room-debug-controls button:disabled { opacity: .5; }
+.room-debug-values dt { color: var(--color-muted); }
+.room-debug-values dd { font-weight: 750; }
+.room-debug-legend { margin-top: .5rem; }
+.room-debug-overlay { position: absolute; inset: 0; z-index: 802; width: 100%; height: 100%; pointer-events: none; stroke-width: 3; }
+
+.room-debug-comparison {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem;
+  margin-block: .8rem;
+}
+
+.room-debug-comparison > p { flex-basis: 100%; color: var(--color-muted); }
+.room-debug-pose { width: min(100%, 10rem); }
+.room-debug-pose figcaption { margin-top: .3rem; font-weight: 700; }
+.room-debug-pose-art { position: relative; border-radius: .5rem; background: var(--color-cream); }
+.room-debug-pose-art[data-facing='left'] { scale: -1 1; }
+.room-debug-pose-ground, .room-debug-pose-contact { position: absolute; pointer-events: none; }
+.room-debug-pose-ground { inset-inline: 0; border-top: 1px dashed var(--color-forest); opacity: .7; }
+.room-debug-pose-contact {
+  width: .38rem;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border: 1px solid var(--color-forest);
+  border-radius: 50%;
+  background: #ffe69d;
+}

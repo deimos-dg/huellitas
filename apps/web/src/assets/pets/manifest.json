@@ -4,7 +4,7 @@
   "portraits": {
     "columns": 6,
     "rows": 3,
-    "density": 2,
+    "density": 3,
     "indices": {
       "golden": 0,
       "beagle": 1,
@@ -29,77 +29,136 @@
   "animated": {
     "golden": {
       "columns": 8,
-      "rows": 9,
-      "density": 1,
+      "rows": 8,
+      "density": 2,
       "type": "detailed",
+      "previewScale": 1,
       "tracks": {
         "idle": {
           "start": 0,
-          "count": 4,
-          "fps": 3
+          "count": 9,
+          "durations": [
+            110,
+            110,
+            110,
+            110,
+            110,
+            110,
+            110,
+            110,
+            110
+          ],
+          "sheet": {
+            "id": "golden-idle",
+            "columns": 4,
+            "rows": 3,
+            "density": 2
+          }
         },
         "walk": {
-          "start": 4,
+          "start": 0,
           "count": 6,
           "fps": 7
         },
         "run": {
-          "start": 10,
-          "count": 4,
-          "fps": 8
+          "start": 0,
+          "count": 16,
+          "durations": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "sheet": {
+            "id": "golden-run",
+            "columns": 4,
+            "rows": 4,
+            "density": 2
+          }
         },
         "sit": {
-          "start": 14,
+          "start": 6,
           "count": 4,
           "fps": 5
         },
         "sleep": {
-          "start": 18,
+          "start": 10,
           "count": 3,
           "fps": 2
         },
         "wake": {
-          "start": 21,
+          "start": 13,
           "count": 4,
           "fps": 5
         },
         "eat": {
-          "start": 25,
+          "start": 17,
           "count": 5,
           "fps": 5
         },
         "drink": {
-          "start": 30,
+          "start": 22,
           "count": 5,
           "fps": 5
         },
         "bath": {
-          "start": 35,
+          "start": 27,
           "count": 6,
           "fps": 5
         },
         "shake": {
-          "start": 41,
+          "start": 33,
           "count": 5,
           "fps": 7
         },
         "play": {
-          "start": 46,
+          "start": 38,
           "count": 5,
           "fps": 6
         },
         "jump": {
-          "start": 51,
-          "count": 5,
-          "fps": 7
+          "start": 0,
+          "count": 12,
+          "durations": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "sheet": {
+            "id": "golden-jump",
+            "columns": 4,
+            "rows": 3,
+            "density": 2
+          }
         },
         "pet": {
-          "start": 56,
+          "start": 43,
           "count": 5,
           "fps": 5
         },
         "happy": {
-          "start": 61,
+          "start": 48,
           "count": 10,
           "fps": 6
         }
@@ -108,8 +167,9 @@
     "gato-atigrado": {
       "columns": 8,
       "rows": 10,
-      "density": 1,
+      "density": 2,
       "type": "detailed",
+      "previewScale": 1,
       "tracks": {
         "idle": {
           "start": 0,
@@ -186,8 +246,9 @@
     "beagle": {
       "columns": 8,
       "rows": 8,
-      "density": 1,
+      "density": 1.5,
       "type": "compact",
+      "previewScale": 0.64,
       "tracks": {
         "idle": {
           "start": 0,
@@ -246,8 +307,9 @@
     "perro-mestizo": {
       "columns": 8,
       "rows": 8,
-      "density": 1,
+      "density": 1.5,
       "type": "compact",
+      "previewScale": 0.64,
       "tracks": {
         "idle": {
           "start": 0,
@@ -302,8 +364,9 @@
     "labrador": {
       "columns": 8,
       "rows": 8,
-      "density": 1,
+      "density": 1.5,
       "type": "compact",
+      "previewScale": 0.64,
       "tracks": {
         "idle": {
           "start": 0,
@@ -362,8 +425,9 @@
     "husky": {
       "columns": 8,
       "rows": 8,
-      "density": 1,
+      "density": 1.5,
       "type": "compact",
+      "previewScale": 0.64,
       "tracks": {
         "idle": {
           "start": 0,
@@ -418,8 +482,9 @@
     "corgi": {
       "columns": 8,
       "rows": 8,
-      "density": 1,
+      "density": 1.5,
       "type": "compact",
+      "previewScale": 0.64,
       "tracks": {
         "idle": {
           "start": 0,
@@ -474,8 +539,9 @@
     "pug": {
       "columns": 8,
       "rows": 8,
-      "density": 1,
+      "density": 1.5,
       "type": "compact",
+      "previewScale": 0.64,
       "tracks": {
         "idle": {
           "start": 0,
@@ -530,8 +596,9 @@
     "poodle": {
       "columns": 8,
       "rows": 8,
-      "density": 1,
+      "density": 1.5,
       "type": "compact",
+      "previewScale": 0.64,
       "tracks": {
         "idle": {
           "start": 0,
@@ -590,8 +657,9 @@
     "dalmata": {
       "columns": 8,
       "rows": 8,
-      "density": 1,
+      "density": 1.5,
       "type": "compact",
+      "previewScale": 0.64,
       "tracks": {
         "idle": {
           "start": 0,
@@ -646,8 +714,9 @@
     "gato-naranja": {
       "columns": 5,
       "rows": 3,
-      "density": 1,
+      "density": 2,
       "type": "compact",
+      "previewScale": 0.85,
       "tracks": {
         "idle": {
           "start": 0,
@@ -710,8 +779,9 @@
     "gato-negro": {
       "columns": 5,
       "rows": 3,
-      "density": 1,
+      "density": 2,
       "type": "compact",
+      "previewScale": 0.85,
       "tracks": {
         "idle": {
           "start": 0,
@@ -774,8 +844,9 @@
     "gato-blanco": {
       "columns": 5,
       "rows": 3,
-      "density": 1,
+      "density": 2,
       "type": "compact",
+      "previewScale": 0.85,
       "tracks": {
         "idle": {
           "start": 0,
@@ -838,8 +909,9 @@
     "gato-gris": {
       "columns": 5,
       "rows": 3,
-      "density": 1,
+      "density": 2,
       "type": "compact",
+      "previewScale": 0.85,
       "tracks": {
         "idle": {
           "start": 0,
@@ -902,8 +974,9 @@
     "gato-tricolor": {
       "columns": 5,
       "rows": 3,
-      "density": 1,
+      "density": 2,
       "type": "compact",
+      "previewScale": 0.85,
       "tracks": {
         "idle": {
           "start": 0,
@@ -966,8 +1039,9 @@
     "gato-siames": {
       "columns": 5,
       "rows": 3,
-      "density": 1,
+      "density": 2,
       "type": "compact",
+      "previewScale": 0.85,
       "tracks": {
         "idle": {
           "start": 0,
@@ -1030,8 +1104,9 @@
     "sphynx": {
       "columns": 5,
       "rows": 3,
-      "density": 1,
+      "density": 2,
       "type": "compact",
+      "previewScale": 0.85,
       "tracks": {
         "idle": {
           "start": 0,
@@ -1094,8 +1169,9 @@
     "gato-mestizo": {
       "columns": 5,
       "rows": 3,
-      "density": 1,
+      "density": 2,
       "type": "compact",
+      "previewScale": 0.85,
       "tracks": {
         "idle": {
           "start": 0,

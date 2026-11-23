@@ -47,3 +47,12 @@ Entorno Windows con Node.js 24, .NET SDK 10, PostgreSQL 17 en Docker y Chrome lo
 | `npm run build` | TypeScript y compilación de producción correctos. |
 | `npm run test:e2e` | 12 aprobadas en Chrome. Incluyen el movimiento reducido, la pausa y el aterrizaje y la repetición del salto del Sphynx. |
 | Creador activo en `127.0.0.1:5173` | Las 18 variantes cargaron su propio atlas sin errores de JavaScript. |
+
+## Revisión de nitidez y GIF
+
+| Verificación | Resultado |
+| --- | --- |
+| `npm run prepare:pets` | Se regeneraron los 18 retratos y los atlas en WebP sin pérdida. Las tres secuencias GIF del golden tienen atlas propios. |
+| `npm run build` | TypeScript y la compilación de producción pasaron. |
+| `npm run test:e2e` | 12 aprobadas en Chrome. La prueba del Beagle verifica que el reposo use el atlas de retratos y que al caminar se aplique la escala reducida. |
+| Comparación en navegador | Se comprobaron los recursos de reposo y carrera de las 18 variantes. El manifiesto conserva todas las duraciones de los GIF y la exportación del salto tiene fondo transparente. |

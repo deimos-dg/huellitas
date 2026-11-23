@@ -9,9 +9,10 @@ type PetSpriteProps = {
   coat?: Coat
   collar?: Collar
   motionRef?: Ref<HTMLSpanElement>
+  displayScale?: number
 }
 
-export function PetSprite({ atlas, frame, label, coat = 'natural', collar = 'original', motionRef }: PetSpriteProps) {
+export function PetSprite({ atlas, frame, label, coat = 'natural', collar = 'original', motionRef, displayScale }: PetSpriteProps) {
   const column = frame % atlas.columns
   const row = Math.floor(frame / atlas.columns)
   const offsetX = atlas.columns === 1 ? 0 : column / (atlas.columns - 1) * 100
@@ -34,7 +35,7 @@ export function PetSprite({ atlas, frame, label, coat = 'natural', collar = 'ori
       aria-hidden={label ? undefined : true}
       style={{ aspectRatio: `${spriteDimensions.width} / ${spriteDimensions.height}` }}
     >
-      <span className="pet-sprite-body" ref={motionRef}>
+      <span className="pet-sprite-body" ref={motionRef} style={displayScale === undefined ? undefined : { scale: displayScale }}>
         <span className="pet-sprite-art" style={artStyle} />
         {collarColor && (
           <span

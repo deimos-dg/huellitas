@@ -1,0 +1,63 @@
+.garden-page {
+  padding-block: clamp(1.8rem, 4vw, 3.6rem) 3rem;
+  background: radial-gradient(ellipse at 80% 4%, #e8ecdc, transparent 55%), var(--color-ivory);
+}
+
+.garden-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .7rem 1.25rem;
+  margin-bottom: 1.2rem;
+}
+
+.garden-heading h1 {
+  font: 650 clamp(2.1rem, 5vw, 3.95rem)/1.05 var(--font-serif);
+  letter-spacing: -.035em;
+}
+
+.garden-time {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  border: 1px solid var(--color-line);
+  border-radius: 99px;
+  padding: .45rem .82rem;
+  background: var(--color-ivory);
+  font-size: .84rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.garden-time time { color: var(--color-muted); }
+
+.garden-time-dot {
+  width: .6rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #c88a2d;
+}
+
+.garden-time[data-period='sunset'] .garden-time-dot { background: #bc6743; }
+.garden-time[data-period='dusk'] .garden-time-dot { background: #85638f; }
+.garden-time[data-period='night'] .garden-time-dot { background: #344d80; }
+
+.garden-stage {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: clamp(.85rem, 2vw, 1.45rem);
+  box-shadow: 0 12px 36px #2535291f;
+}
+
+.garden-stage img { display: block; width: 100%; height: auto; }
+
+.garden-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: 1.25rem;
+  gap: .85rem 1.2rem;
+}
