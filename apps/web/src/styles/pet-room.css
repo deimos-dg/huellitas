@@ -262,7 +262,8 @@
 
 .room-hotspot:not([data-embedded='true']):is(:focus-visible, :hover, [data-active='true']) span { opacity: 1; }
 .room-stage[data-scene='garden'] .room-hotspot[data-object='food'] span { left: auto; right: 0; transform: none; }
-.room-stage[data-scene='kitchen'] .room-hotspot span { bottom: calc(100% + .2rem); }
+.room-stage[data-scene='kitchen'] .room-hotspot span,
+.room-hotspot:is([data-object='bathtub'], [data-object='exam-table']) span { bottom: calc(100% + .2rem); }
 .room-stage[data-scene='living-room'] .room-hotspot[data-object='ball'] span { inset-inline: auto 0; bottom: calc(100% + .2rem); transform: none; }
 
 .room-destination {

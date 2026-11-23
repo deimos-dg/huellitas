@@ -2,12 +2,18 @@ export type Point = Readonly<{ x: number; y: number }>
 export type Rectangle = Point & Readonly<{ width: number; height: number }>
 export type Facing = 'left' | 'right'
 export type ObjectId = 'bed' | 'green-bed' | 'pink-bed' | 'rug' | 'scratcher' | 'food' | 'water' | 'ball' | 'rope' | 'bench' | 'ring' | 'hurdle'
+  | 'bathtub' | 'exam-table'
 export type ObjectAction = 'rest' | 'eat' | 'drink' | 'play' | 'look' | 'jump'
+
+type CareInteraction = Readonly<{
+  sequence: readonly ['Approach', 'Ready', 'Bathing' | 'Examination', 'Finish', 'Exit']
+  art: 'pending'
+  pendingNote: string
+}>
 
 export type RoomObject = Readonly<{
   id: ObjectId
   label: string
-  action: ObjectAction
   art?: Rectangle & { depth?: number }
   paintedProp?: boolean
   reservedFor?: 'cat'
@@ -15,7 +21,7 @@ export type RoomObject = Readonly<{
   interaction: Point
   restingPoint?: Point
   facing: Facing
-}>
+}> & ({ action: 'look'; care?: CareInteraction } | { action: Exclude<ObjectAction, 'look'>; care?: never })
 
 export function restingBedAt(objects: readonly RoomObject[], position: Point) {
   return objects.find(object => object.action === 'rest' && object.restingPoint?.x === position.x && object.restingPoint.y === position.y)

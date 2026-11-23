@@ -10,7 +10,7 @@ type SceneImage = { file: string; size: Size; alt: string }
 type ForegroundMask = { id: string; polygon: Polygon; depth: number }
 
 export type PlayableScene = Readonly<{
-  id: 'garden' | 'park' | 'kitchen' | 'living-room' | typeof roomId
+  id: Exclude<SceneId, 'dressingRoom'> | typeof roomId
   name: string
   status: 'playable' | 'practice'
   background?: SceneImage
@@ -156,10 +156,60 @@ export const livingRoomScene: PlayableScene = {
   spawn: at(581, 514), orientations: directions, sizeRange: [.66, .85],
 }
 
-export const originalScenes: readonly (PlayableScene | PendingScene)[] = [gardenScene, parkScene, kitchenScene, livingRoomScene,
-  { id: 'bathroom', name: 'Baño', status: 'pending-art', lighting: 'bathroom', background: image('02_Bano.png', 1671, 'Baño con tina y estantería.'), note: 'Máscara de la tina y animación de baño en el lugar.' },
-  { id: 'infirmary', name: 'Enfermería', status: 'pending-art', lighting: 'infirmary', background: image('06_Enfermeria.png', 1670, 'Enfermería con mesa de exploración.'), note: 'Oclusión de mesa y carro y punto de atención en el suelo.' },
+export const bathroomScene: PlayableScene = {
+  id: 'bathroom', name: 'Baño', status: 'playable', lighting: 'bathroom',
+  background: image('02_Bano.png', 1671, 'Baño ilustrado con bañera, estantería, alfombra y cestas.'),
+  navigation: {
+    floor: polygon([176, 478], [362, 445], [793, 445], [920, 503], [858, 552], [170, 552], [102, 522]),
+    obstacles: [
+      polygon([0, 289], [193, 289], [194, 503], [141, 522], [0, 530]), // Estantería
+      polygon([0, 482], [57, 476], [96, 492], [126, 521], [133, 576], [0, 576]), // Hojas del primer plano
+      polygon([194, 444], [207, 424], [292, 420], [313, 442], [318, 481], [295, 496], [208, 497], [190, 482]), // Cuenco
+      polygon([338, 378], [431, 377], [440, 403], [428, 455], [406, 468], [350, 469], [335, 447]), // Maceta
+      polygon([412, 333], [467, 315], [786, 316], [829, 337], [822, 445], [789, 480], [752, 494], [473, 484], [422, 438]), // Bañera
+      polygon([817, 404], [971, 405], [1009, 453], [981, 495], [897, 502], [823, 485]), // Cesta y esquina derecha
+    ],
+  },
+  objects: [{ id: 'bathtub', label: 'Observar la bañera', action: 'look', hitbox: area(423, 334, 399, 136), interaction: at(650, 520), facing: 'left',
+    care: { sequence: ['Approach', 'Ready', 'Bathing', 'Finish', 'Exit'], art: 'pending', pendingNote: 'Baño pendiente de recursos de animación.' } }],
+  masks: [
+    { id: 'frente-banera', depth: at(0, 483).y, polygon: polygon([423, 349], [450, 357], [506, 365], [613, 368], [719, 363],
+      [798, 355], [821, 349], [820, 361], [813, 370], [800, 423], [786, 449], [771, 459], [750, 465], [748, 479],
+      [729, 485], [715, 471], [503, 469], [487, 475], [471, 471], [468, 462], [474, 451], [449, 431], [433, 378], [423, 369]) },
+  ],
+  spawn: at(323, 530), orientations: directions, sizeRange: [.64, .80],
+}
+
+export const infirmaryScene: PlayableScene = {
+  id: 'infirmary', name: 'Enfermería', status: 'playable', lighting: 'infirmary',
+  background: image('06_Enfermeria.png', 1670, 'Enfermería ilustrada con mesa de revisión, taburete, carrito y gabinetes.'),
+  navigation: {
+    floor: polygon([152, 460], [349, 419], [700, 417], [959, 446], [970, 517], [916, 552], [147, 552], [104, 511]),
+    obstacles: [
+      polygon([0, 292], [144, 292], [151, 470], [128, 496], [0, 503]), // Estantería izquierda
+      polygon([132, 301], [468, 294], [477, 418], [142, 486]), // Gabinetes del lavamanos
+      polygon([461, 290], [1023, 288], [1023, 458], [474, 416]), // Gabinetes del fondo y vitrina
+      polygon([204, 374], [301, 374], [322, 479], [320, 500], [272, 514], [237, 514], [191, 499], [190, 478]), // Taburete
+      polygon([347, 308], [702, 306], [702, 409], [647, 470], [432, 505], [396, 478], [347, 389]), // Mesa de revisión
+      polygon([734, 316], [936, 316], [947, 513], [904, 543], [749, 531], [728, 517]), // Carrito
+      polygon([966, 347], [1023, 337], [1023, 576], [927, 576], [927, 508]), // Planta y mueble del frente derecho
+      polygon([0, 447], [38, 449], [64, 471], [117, 553], [117, 576], [0, 576]), // Planta y mueble del frente izquierdo
+    ],
+  },
+  objects: [{ id: 'exam-table', label: 'Observar la mesa de revisión', action: 'look', hitbox: area(363, 318, 327, 145), interaction: at(632, 524), facing: 'left',
+    care: { sequence: ['Approach', 'Ready', 'Examination', 'Finish', 'Exit'], art: 'pending', pendingNote: 'Revisión pendiente de recursos de animación.' } }],
+  masks: [
+    { id: 'tablero-revision', depth: at(0, 489).y, polygon: polygon([365, 332], [393, 324], [501, 315], [573, 312],
+      [621, 313], [651, 319], [683, 318], [690, 325], [688, 338], [662, 343], [662, 400], [653, 406], [599, 415],
+      [593, 380], [541, 385], [499, 378], [368, 369], [366, 354], [362, 345]) },
+    { id: 'caja-carrito', depth: at(0, 533).y, polygon: polygon([755, 449], [769, 447], [778, 436], [815, 444], [874, 441],
+      [895, 431], [916, 427], [908, 493], [895, 505], [869, 516], [754, 501], [743, 508], [743, 488], [756, 481]) },
+  ],
+  spawn: at(334, 535), orientations: directions, sizeRange: [.62, .80],
+}
+
+export const originalScenes: readonly (PlayableScene | PendingScene)[] = [gardenScene, parkScene, kitchenScene, livingRoomScene, bathroomScene, infirmaryScene,
   { id: 'dressingRoom', name: 'Vestidor y accesorios', status: 'pending-art', lighting: 'dressingRoom', note: 'Ilustración original y recursos de equipamiento.' },
 ]
 
-export const playableScenes = [gardenScene, parkScene, kitchenScene, livingRoomScene, practiceScene] as const
+export const playableScenes = [gardenScene, parkScene, kitchenScene, livingRoomScene, bathroomScene, infirmaryScene, practiceScene] as const

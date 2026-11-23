@@ -6,12 +6,12 @@ import { PetController } from '../../apps/web/src/features/pet-motion-2d/control
 import { PetBehaviorController } from '../../apps/web/src/features/pet-motion-2d/controllers/PetBehaviorController'
 import { actionCatalog, actions, canStartAction, clipDefinition, technicalClips } from '../../apps/web/src/features/pet-motion-2d/domain/animationCatalog'
 import { idleDurationMs, sampleIdleMotion } from '../../apps/web/src/features/pet-motion-2d/domain/idleMotion'
-import { canOccupy, canWalkSegment, planRoute, roomNavigation, vertices } from '../../apps/web/src/features/pet-motion-2d/domain/navigation'
+import { canOccupy, canWalkSegment, planRoute, roomNavigation, shapeBounds, vertices } from '../../apps/web/src/features/pet-motion-2d/domain/navigation'
 import { canTransition } from '../../apps/web/src/features/pet-motion-2d/domain/petState'
 import type { PetState } from '../../apps/web/src/features/pet-motion-2d/domain/petState'
 import { objects, petId, roomId, roomObjects, spawn } from '../../apps/web/src/features/pet-motion-2d/domain/room'
 import { captureTransition, previewStepMs } from '../../apps/web/src/features/pet-motion-2d/scene/transitionPreview'
-import { gardenScene, kitchenScene, livingRoomScene, originalScenes, parkScene } from '../../apps/web/src/features/pet-motion-2d/domain/sceneCatalog'
+import { bathroomScene, gardenScene, infirmaryScene, kitchenScene, livingRoomScene, originalScenes, parkScene } from '../../apps/web/src/features/pet-motion-2d/domain/sceneCatalog'
 import { imageToLogical, screenToLogical } from '../../apps/web/src/features/pet-motion-2d/domain/sceneCoordinates'
 
 const timing = { duration: () => 96 }
@@ -31,8 +31,9 @@ function advanceUntil(pet: PetController, wanted: PetState, delta = 16, map = ro
 
 test('el catálogo identifica siete originales y solo ofrece fondos navegables con geometría convexa válida', () => {
   assert.equal(originalScenes.length, 7)
-  assert.equal(originalScenes.filter(scene => scene.status === 'pending-art').length, 3)
-  for (const scene of [gardenScene, parkScene, kitchenScene, livingRoomScene]) {
+  assert.equal(originalScenes.filter(scene => scene.status === 'pending-art').length, 1)
+  for (const scene of originalScenes) {
+    if (scene.status === 'pending-art') continue
     assert.ok(existsSync(`Imagenes/escenarios/${scene.background?.file}`))
     assert.ok(canOccupy(scene.spawn, scene.navigation))
     for (const shape of [scene.navigation.floor, ...scene.navigation.obstacles]) {
@@ -150,6 +151,58 @@ test('la cocina deja sitio junto a ambos recipientes y bloquea la mesa y los mos
   const route = planRoute(food.interaction, water.interaction, map)!
   assert.ok(route.length > 1)
   assert.ok(route.every((point, index) => canWalkSegment(route[index - 1] ?? food.interaction, point, map)))
+})
+
+test('baño y enfermería admiten rutas desde el inicio sin cruzar equipamiento ni aislar suelo libre', () => {
+  for (const [scene, from, to, blocked] of [
+    [bathroomScene, { x: 412.5, y: 581.25 }, { x: 1012.5, y: 581.25 }, [
+      { x: 742.5, y: 562.5 }, { x: 138.75, y: 626.25 }, { x: 318.75, y: 600 }, { x: 477.5, y: 567.5 },
+    ]],
+    [infirmaryScene, { x: 423.75, y: 570 }, { x: 890, y: 576.25 }, [
+      { x: 632.5, y: 554.5 }, { x: 1037.5, y: 611.25 }, { x: 325, y: 610 }, { x: 276.25, y: 555 },
+    ]],
+  ] as const) {
+    const { navigation: map, spawn } = scene
+    for (const point of blocked) assert.equal(canOccupy(point, map), false, `${scene.id}: ${JSON.stringify(point)}`)
+    assert.equal(canWalkSegment(from, to, map), false)
+    const route = planRoute(from, to, map)
+    assert.ok(route && route.length > 1, scene.id)
+    assert.ok(route.every((point, i) => canWalkSegment(route[i - 1] ?? from, point, map)))
+
+    const bounds = shapeBounds(map.floor)
+    for (let y = bounds.y + 5; y < bounds.y + bounds.height; y += 20) {
+      for (let x = bounds.x + 5; x < bounds.x + bounds.width; x += 20) {
+        const target = { x, y }
+        if (canOccupy(target, map)) assert.ok(planRoute(spawn, target, map), `${scene.id}: ${JSON.stringify(target)}`)
+      }
+    }
+  }
+})
+
+test('el Golden se aproxima y observa los equipos desde un apoyo válido y conserva la prioridad de usuario', () => {
+  for (const [scene, procedure] of [[bathroomScene, 'Bathing'], [infirmaryScene, 'Examination']] as const) {
+    const [object] = scene.objects
+    const pet = new PetController(timing, undefined, scene)
+    assert.deepEqual(object.care?.sequence, ['Approach', 'Ready', procedure, 'Finish', 'Exit'])
+    pet.request({ type: 'object', id: object.id })
+    assert.equal(pet.snapshot().care?.phase, 'Approach')
+    assert.ok(advanceUntil(pet, 'Aligning', 16, scene.navigation).includes('Stopping'))
+    assert.equal(pet.snapshot().care?.phase, 'Ready')
+    advanceUntil(pet, 'Looking', 16, scene.navigation)
+    assert.deepEqual(pet.snapshot().position, object.interaction)
+    assert.equal(pet.snapshot().animation.facing, object.facing)
+    assert.equal(pet.snapshot().animation.clip, 'look')
+    assert.equal(pet.snapshot().care?.art, 'pending')
+    pet.cancelAutonomous()
+    assert.equal(pet.snapshot().state, 'Looking')
+    advanceUntil(pet, 'Idle', 16, scene.navigation)
+    assert.equal(pet.snapshot().care, undefined)
+    assert.deepEqual(pet.poseForStorage(), { position: object.interaction, posture: 'standing', facing: object.facing })
+
+    pet.request({ type: 'move', target: scene.spawn })
+    advanceUntil(pet, 'Idle', 16, scene.navigation)
+    assert.deepEqual(pet.snapshot().position, scene.spawn)
+  }
 })
 
 test('los guardados de escenas conviven y una posición bloqueada restaura el punto inicial', () => {

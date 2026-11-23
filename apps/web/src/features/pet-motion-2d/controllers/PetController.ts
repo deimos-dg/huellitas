@@ -34,7 +34,7 @@ export class PetController {
   private distance = 0
   private gait: Gait = 'walk'
   private trip?: Trip
-  private actionObject?: ObjectId
+  private actionObject?: RoomObject
   private bed?: RoomObject
   private turn?: Facing
   private brakeTarget?: Point
@@ -61,10 +61,15 @@ export class PetController {
     const airborne = this.state === 'Jumping' && progress >= jumpEvents[0].at && progress < jumpEvents[1].at
     const layers = animationLayers(this.state, airborne ? 'airborne' : this.posture, this.social, this.emotion)
     const animation: AnimationCue = { clip: composeClip(layers, this.stateClip(), expression), elapsed, distance: this.distance, speed: this.speed, facing: this.facing, gait: this.gait }
+    const interaction = this.trip?.object ?? this.actionObject
+    const care = interaction?.care && {
+      ...interaction.care,
+      phase: this.state === 'Aligning' || this.state === 'Looking' ? 'Ready' as const : 'Approach' as const,
+    }
     return {
       position: this.position, state: this.state, animation, layers, expressionActive: Boolean(expression), destination: this.trip?.target,
       waypoints: this.trip?.waypoints ?? [], autonomousRest: this.state === 'Resting' && this.autonomousRest,
-      selectedObject: this.trip?.object?.id ?? this.actionObject ?? this.bed?.id, notice: this.notice,
+      selectedObject: interaction?.id ?? this.bed?.id, care, notice: this.notice,
     }
   }
 
@@ -92,7 +97,7 @@ export class PetController {
 
   cancelAutonomous() {
     if (this.pending?.origin === 'autonomous') this.pending = undefined
-    if (this.state === 'Looking') this.enter('Idle')
+    if (this.state === 'Looking' && !this.actionObject) this.enter('Idle')
     if (this.state === 'Blinking') this.enter('Sitting')
     if (this.trip?.origin !== 'autonomous') return
     if (travelStates.has(this.state) || this.state === 'Turning') this.startBraking()
@@ -114,7 +119,7 @@ export class PetController {
     this.notice = undefined
 
     if (clipDefinition(clips[this.state])?.interruption === 'queue') {
-      const sameObject = object && object.id === (this.actionObject ?? this.trip?.object?.id)
+      const sameObject = object && object.id === (this.actionObject?.id ?? this.trip?.object?.id)
       if (sameObject && this.trip) this.trip.origin = origin
       if (sameObject && this.state === 'Settling' && origin === 'user') this.autonomousRest = false
       this.pending = sameObject ? undefined : command
@@ -289,7 +294,7 @@ export class PetController {
     const object = this.trip?.object
     if (this.state === 'Stopping' && object && !this.pending) {
       const facing = object.facing
-      if (object.action === 'rest' || object.action === 'play' || facing !== this.facing) {
+      if (object.care || object.action === 'rest' || object.action === 'play' || facing !== this.facing) {
         this.turn = facing !== this.facing ? facing : undefined
         this.enter('Aligning')
         return
@@ -304,7 +309,7 @@ export class PetController {
     }
     this.trip = undefined
     this.enter(interaction ? interactionState[interaction.action] : 'Idle')
-    this.actionObject = interaction?.id
+    this.actionObject = interaction
     this.resumePending()
   }
 

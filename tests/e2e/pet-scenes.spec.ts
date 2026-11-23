@@ -49,7 +49,7 @@ test('el parque rodea obstáculos, cancela la ruta al salir y restaura cada posi
   await coordinate(page, 796, 596)
   await expectPosition(page, 796, 596, 5)
   const picker = page.getByLabel('Escenario')
-  await expect(picker.locator('option[value="bathroom"]')).toBeDisabled()
+  await expect(picker.locator('option[value="dressingRoom"]')).toBeDisabled()
   await picker.selectOption('park')
   await expect(page).toHaveURL(/escena=park$/)
   await expect(picker).toBeFocused()
@@ -71,8 +71,8 @@ test('el parque rodea obstáculos, cancela la ruta al salir y restaura cada posi
   await expect(stage).toHaveAttribute('data-state', 'Idle')
   await page.reload()
   await expectPosition(page, 833.75, 410)
-  await page.goto('/habitacion?escena=bathroom')
-  await expect(page.getByRole('alert')).toContainText('Baño está pendiente')
+  await page.goto('/habitacion?escena=dressingRoom')
+  await expect(page.getByRole('alert')).toContainText('Vestidor y accesorios está pendiente')
   await expect(stage).toHaveAttribute('data-scene', 'garden')
 })
 
@@ -269,8 +269,8 @@ test('las dos camas y el despertar usan apoyos propios que sobreviven al cambio 
 
   await stage.getByRole('button', { name: 'Cama rosa' }).click()
   await expect(stage).toHaveAttribute('data-state', 'WakingUp')
+  await expect(stage).toHaveAttribute('data-state', 'Resting', { timeout: 12_000 })
   await expectPosition(page, 361.25, 485, .01)
-  await expect(stage).toHaveAttribute('data-state', 'Resting')
   await page.reload()
   await expectPosition(page, 361.25, 485, .01)
   await expect(stage).toHaveAttribute('data-state', 'Resting')
@@ -308,3 +308,60 @@ test('la sala se adapta al móvil y permite jugar y descansar sin usar el rascad
   await expect(stage).toHaveAttribute('data-state', 'Resting', { timeout: 12_000 })
   await expectPosition(page, 652.5, 642.5)
 })
+
+for (const { id, name, file, naturalWidth, mask, blocked, spawn, target, observation, pending, other, otherSpawn, mobile } of [
+  { id: 'bathroom', name: 'baño', file: '02_Bano', naturalWidth: 1671, mask: 'frente-banera',
+    blocked: [[880, 597.5], [186.25, 621.25]], spawn: [403.75, 662.5], target: [812.5, 650],
+    observation: 'Observar la bañera', pending: 'Baño pendiente de recursos de animación.', other: 'infirmary', otherSpawn: [417.5, 668.75], mobile: false },
+  { id: 'infirmary', name: 'enfermería', file: '06_Enfermeria', naturalWidth: 1670, mask: 'caja-carrito',
+    blocked: [[600, 605], [1045, 616.25]], spawn: [417.5, 668.75], target: [790, 655],
+    observation: 'Observar la mesa de revisión', pending: 'Revisión pendiente de recursos de animación.', other: 'bathroom', otherSpawn: [403.75, 662.5], mobile: true },
+] as const) {
+  test(`${name} muestra el original, bloquea muebles y guarda la aproximación de observación`, async ({ page }) => {
+    if (mobile) await page.setViewportSize({ width: 360, height: 800 })
+    await page.clock.setFixedTime(new Date(2026, 10, 23, 20, 0))
+    await page.goto('/habitacion')
+    await page.getByRole('checkbox', { name: 'Comportamiento autónomo' }).uncheck()
+    const picker = page.getByLabel('Escenario')
+    await picker.selectOption(id)
+    const stage = page.getByTestId('room-stage')
+    await expect(stage).toHaveAttribute('data-scene', id)
+    const art = stage.locator('.room-scene-base img')
+    await expect(art).toHaveAttribute('src', new RegExp(file))
+    expect(await art.evaluate(async (img: HTMLImageElement) => {
+      await img.decode()
+      return [img.naturalWidth, img.naturalHeight]
+    })).toEqual([naturalWidth, 941])
+    const box = await stage.boundingBox()
+    expect(box!.width / box!.height).toBeCloseTo(naturalWidth / 941, 3)
+    if (mobile) expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(360)
+
+    const light = stage.locator('.room-scene-base .day-night')
+    await expect(light).toHaveAttribute('data-period', 'night')
+    await expect(light.locator('.day-night-lights')).toHaveCSS('opacity', '0.76')
+    await expect(light.locator('.day-night-wash, .day-night-moon')).toHaveCount(0)
+    const foreground = stage.locator(`[data-mask="${mask}"]`)
+    await expect(foreground).toHaveCSS('clip-path', /^polygon\(/)
+    await expect(foreground.locator('.day-night')).toHaveAttribute('data-period', 'night')
+
+    for (const [x, y] of blocked) {
+      await coordinate(page, x, y)
+      await expect(page.getByRole('status')).toContainText('Elige un punto libre del suelo')
+      await expectPosition(page, ...spawn, .01)
+    }
+
+    await stage.getByRole('button', { name: observation }).click()
+    await expect(stage).toHaveAttribute('data-state', 'Looking', { timeout: 10_000 })
+    await expectPosition(page, ...target, .01)
+    await expect(page.getByTestId('room-pet')).toHaveAttribute('data-facing', 'left')
+    await expect(page.getByRole('status')).toContainText(pending)
+    await expect(stage).toHaveAttribute('data-state', 'Idle')
+    await picker.selectOption(other)
+    await expectPosition(page, ...otherSpawn, .01)
+    await picker.selectOption(id)
+    await expectPosition(page, ...target, .01)
+    await page.reload()
+    await expect(stage).toHaveAttribute('data-state', 'Idle')
+    await expectPosition(page, ...target, .01)
+  })
+}

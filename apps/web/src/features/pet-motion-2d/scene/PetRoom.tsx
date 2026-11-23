@@ -37,7 +37,7 @@ export function PetRoom({ scene, picker, notice: sceneNotice }: { scene: Playabl
     if (!scene.background) return 'ready'
     return sceneArt[scene.id] ? 'pending' : 'error'
   })
-  const { state, notice } = snapshot
+  const { state, notice, care } = snapshot
   const stage = useRef<HTMLDivElement>(null)
   const [debugClip, setDebugClip] = useState<PreviewSelection>('live')
   const [preview, setPreview] = useState<RoomPreview>()
@@ -78,6 +78,7 @@ export function PetRoom({ scene, picker, notice: sceneNotice }: { scene: Playabl
             <div>
               <p className="room-status-name">{notice ?? interaction}</p>
               <p className="room-status-note">{animationNote || `Golden Retriever · ${scene.name}`}</p>
+              {care && state === 'Looking' && <p className="room-status-note">{care.pendingNote}</p>}
               {emotion && <p className="room-status-note">Emoción · {emotion.name}{emotion.availability === 'Missing' && ' · sin animación disponible'}</p>}
             </div>
           </div>

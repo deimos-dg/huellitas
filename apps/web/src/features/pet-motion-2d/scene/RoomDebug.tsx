@@ -182,6 +182,7 @@ export default function RoomDebug({ snapshot, stage, clip, selectClip, preview, 
         <div><dt>Fondo</dt><dd>{scene.background ? `${scene.background.file} · ${artStatus === 'ready' ? 'Cargado' : artStatus === 'error' ? 'Ausente' : 'Cargando'}` : 'Recursos CSS de práctica'}</dd></div>
         <div><dt>Máscaras</dt><dd>{scene.masks.map(mask => mask.id).join(', ') || 'Sin máscaras publicadas'}</dd></div>
         <div><dt>Estado</dt><dd>{snapshot.state}</dd></div>
+        {snapshot.care && <div><dt>Interacción de cuidado</dt><dd>{snapshot.care.phase} · {snapshot.care.sequence.join(' → ')} · Arte pendiente</dd></div>}
         {sequence && <div><dt>Fase de la transición</dt><dd data-testid="room-debug-transition-phase">{preview?.state ?? 'Preparando'}</dd></div>}
         {reviewed && <div><dt>Recursos pendientes en {reviewed.name}</dt><dd>{reviewed.availability} · {reviewed.notes}</dd></div>}
         <div><dt>Posición</dt><dd>{positionLabel(snapshot.position)}</dd></div>

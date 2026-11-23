@@ -45,7 +45,9 @@ export const sceneLighting = {
     lights: [{ x: 56.6, y: 15, radiusX: 12, radiusY: 16 }, { x: 7.5, y: 66.3, radiusX: 7, radiusY: 12 }] } },
   kitchen: { setting: 'indoor', status: 'awaiting-art', layers: { ambientWash: false,
     lights: [{ x: 57, y: 15, radiusX: 10, radiusY: 14 }] } },
-  bathroom: { setting: 'indoor', status: 'awaiting-art' },
-  infirmary: { setting: 'indoor', status: 'awaiting-art' },
+  bathroom: { setting: 'indoor', status: 'awaiting-art', layers: { ambientWash: false,
+    lights: [{ x: 87.3, y: 19, radiusX: 9, radiusY: 14 }] } },
+  infirmary: { setting: 'indoor', status: 'awaiting-art', layers: { ambientWash: false,
+    lights: [{ x: 52.3, y: 10.4, radiusX: 12, radiusY: 16 }] } },
   dressingRoom: { setting: 'indoor', status: 'awaiting-art' },
 } as const satisfies Record<SceneId, SceneLightingProfile>
